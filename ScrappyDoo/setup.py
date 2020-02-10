@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ScrappyDoo",
-    version="0.0.1",
+    version="0.0.1.2",
     author="Ben Knight",
     author_email="info@bknight.co.uk",
     description="Template package",
@@ -14,8 +14,7 @@ setuptools.setup(
     url="https://github.com/benknight135/ScrappyDoo",
     packages=setuptools.find_packages(),
     install_requires=[
-        'requests','beautifulsoup4','lxml',
-        'tkinter','selenium'],
+        'requests','beautifulsoup4','lxml','selenium'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

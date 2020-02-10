@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ScrappyDoo",
-    version="0.0.1.2",
+    version="0.0.1.3",
     author="Ben Knight",
     author_email="info@bknight.co.uk",
-    description="Template package",
+    description="Scrape data from website",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/benknight135/ScrappyDoo",

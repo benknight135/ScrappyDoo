@@ -19,12 +19,8 @@ class ScrappyDoo():
         page = requests.get(self.url)
         self.soup = BeautifulSoup(page.content, 'html.parser')
 
-    def find_element(self,element_type):
-        results = self.soup.find_all(element_type)
-        return results
-
     def find_table(self,match_headers=None):
-        results = self.find_element("table")
+        results = self.soup.find_all("table")
         if (match_headers is not None):
             for result in results:
                 print("Next Result...")

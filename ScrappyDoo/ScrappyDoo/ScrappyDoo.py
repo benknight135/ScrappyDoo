@@ -1,11 +1,18 @@
 import requests
 from lxml import html
 from bs4 import BeautifulSoup
+from pymsgbox import prompt as msgPrompt
+from pymsgbox import password as msgPassword
 
 class ScrappyDoo():
     def __init__(self,url):
         self.url = url
         self.session = requests.Session()
+
+    def login_GUI(self,login_url,username_element="email",password_element="password",enable_csrf=False):
+        username = msgPrompt(text='Enter Username', title='Username')
+        password = msgPassword(text='Enter Password', title='Password',mask='*')
+        self.login_page(login_url,username,password,username_element,password_element,enable_csrf)
 
     def login_page(self,login_url,username,password,username_element="email",password_element="password",enable_csrf=False):
         site = self.session.get(login_url)

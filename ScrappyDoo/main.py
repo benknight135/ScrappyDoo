@@ -7,7 +7,8 @@ def find_quote_text(quote_div):
 
 sd = ScrappyDoo("https://www.halfyardsewingclub.com/admin/users")
 print("Auto logging into webpage...")
-sd.login_page("https://www.halfyardsewingclub.com/login","admin","12345")
+sd.login_GUI("https://www.halfyardsewingclub.com/login")
+
 
 print(sd.soup)
 

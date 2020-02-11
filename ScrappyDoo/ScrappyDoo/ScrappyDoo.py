@@ -5,25 +5,29 @@ from bs4 import BeautifulSoup
 class ScrappyDoo():
     def __init__(self,url):
         self.url = url
+        self.session = requests.Session()
 
-    def login_page(self,login_url,username,password):
-        with requests.Session() as s:
-            site = s.get(login_url)
-            bs_content = BeautifulSoup(site.content, "html.parser")
-            token = bs_content.find("input", {"name":"csrf_token"})["value"]
-            login_data = {"username":username,"password":password, "csrf_token":token}
-            s.post("http://quotes.toscrape.com/login",login_data)
-            self.load_page()
+    def login_page(self,login_url,username,password,username_element="email",password_element="password",enable_csrf=False):
+        site = self.session.get(login_url)
+        bs_content = BeautifulSoup(site.content, "html.parser")
+        if enable_csrf:
+            csrf_wrapper = bs_content.find("input", {"name":"csrf_token"})
+            token = csrf_wrapper["value"]
+            login_data = {username_element:username,password_element:password, "csrf_token":token}
+        else:
+            login_data = {username_element:username,password_element:password}
+        self.session.post(login_url,login_data)
+        self.load_page()
     
     def load_page(self):
-        page = requests.get(self.url)
+        page = self.session.get(self.url)
         self.soup = BeautifulSoup(page.content, 'html.parser')
 
-    def find_table(self,match_headers=None):
+    def find_tables(self,match_headers=None):
         results = self.soup.find_all("table")
-        if (match_headers is not None):
-            for result in results:
-                print("Next Result...")
+        tables = []
+        for result in results:
+            if (match_headers is not None):
                 headers = self.find_table_headers(result)
                 headers_matched = True
                 if len(headers) == len(match_headers):
@@ -34,9 +38,10 @@ class ScrappyDoo():
                 else:
                     headers_matched = False
                 if (headers_matched):
-                    return result
-        else: #if headers are not specified then return all tables from the page
-            return results
+                    print("Headers matched in table")
+                    tables.append(result)
+            else:
+                tables.append(result) #if headers are not specified then return all tables from the page
 
     def find_table_headers(self,table):
         table_headers = []

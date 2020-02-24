@@ -9,9 +9,11 @@ class ScrappyDoo():
         self.url = url
         self.session = requests.Session()
 
-    def login_GUI(self,login_url,username_element="email",password_element="password",enable_csrf=False):
-        username = msgPrompt(text='Enter Username', title='Username')
-        password = msgPassword(text='Enter Password', title='Password',mask='*')
+    def login_GUI(self,login_url,username=None,password=None,username_element="email",password_element="password",enable_csrf=False):
+        if username is None:
+            username = msgPrompt(text='Enter Username', title='Username')
+        if password is None:
+            password = msgPassword(text='Enter Password', title='Password',mask='*')
         self.login_page(login_url,username,password,username_element,password_element,enable_csrf)
 
     def login_page(self,login_url,username,password,username_element="email",password_element="password",enable_csrf=False):
@@ -23,15 +25,18 @@ class ScrappyDoo():
             login_data = {username_element:username,password_element:password, "csrf_token":token}
         else:
             login_data = {username_element:username,password_element:password}
-        self.session.post(login_url,login_data)
+        res = self.session.post(login_url,data=login_data)
         self.load_page()
     
     def load_page(self):
         page = self.session.get(self.url)
         self.soup = BeautifulSoup(page.content, 'html.parser')
 
-    def find_tables(self,match_headers=None):
-        results = self.soup.find_all("table")
+    def find_tables(self,match_headers=None,table_id=None):
+        if (table_id is not None):
+            results = self.soup.find_all("table",id=table_id)
+        else:
+            results = self.soup.find_all("table")
         tables = []
         for result in results:
             if (match_headers is not None):
@@ -49,6 +54,7 @@ class ScrappyDoo():
                     tables.append(result)
             else:
                 tables.append(result) #if headers are not specified then return all tables from the page
+        return tables
 
     def find_table_headers(self,table):
         table_headers = []
